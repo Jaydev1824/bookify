@@ -1,25 +1,37 @@
+name: Node.js CI
+
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
-  build_test_job:
-    name: 'Build and test job'
-    runs-on: ${{ matrix.os }}
-    strategy:
-        matrix:
-          os: [windows-latest, ubuntu-latest, macos-latest]
+  build:
+
+    runs-on: ubuntu-latest
+
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: 'Checking out repo code'
-      uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Change this to your required Node.js version
 
-    - name: 'Validate build'
-      run: |
-        npm install
-        npm run build
+      - name: Install dependencies
+        run: npm install  # Use 'npm ci' for a more predictable build if you have a package-lock.json
 
-    - name: 'Run L0 tests'
-      run: |
-        npm run test
+      - name: Run tests
+        run: npm test  # Adjust based on your test command in package.json
+
+      - name: Build
+        run: npm run build  # If you have a build step, otherwise you can remove this
+
+      - name: Deploy
+        run: npm run deploy  # If you have a deployment script
+        env:
+          NODE_ENV: production
