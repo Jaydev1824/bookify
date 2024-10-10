@@ -1,38 +1,25 @@
-name: Next.js CI
-
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
+  build_test_job:
+    name: 'Build and test job'
+    runs-on: ${{ matrix.os }}
+    strategy:
+        matrix:
+          os: [windows-latest, ubuntu-latest, macos-latest]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16' # Specify the Node.js version
+    - name: 'Checking out repo code'
+      uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: npm install
+    - name: 'Validate build'
+      run: |
+        npm install
+        npm run build
 
-      - name: Run tests
-        run: npm test
-
-      - name: Build application
-        run: npm run build
-
-      - name: Deploy
-        run: |
-          # Replace with your deployment command, e.g.:
-          # npm run deploy
-          echo "Deploying to your platform..."
+    - name: 'Run L0 tests'
+      run: |
+        npm run test
