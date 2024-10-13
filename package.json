@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "jest",  // Update this to use jest for testing
+    "test": "jest", 
     "build": "webpack",
     "dev": "nodemon index.js"
   },
